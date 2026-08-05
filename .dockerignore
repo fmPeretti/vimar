@@ -1,0 +1,23 @@
+node_modules
+**/node_modules
+.next
+**/.next
+dist
+**/dist
+
+# Secrets — never bake these into an image layer. Runtime config comes from
+# docker-compose's env_file / environment instead.
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+
+# The live database, backups and staging files — this is a stateless image;
+# the data directory is mounted in at runtime.
+data
+backups
+
+.git
+*.tsbuildinfo

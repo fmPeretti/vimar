@@ -1,0 +1,1314 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap");
+@import "./tokens.css";
+
+/* ===========================================================================
+   Base
+   ======================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--surface-page);
+  color: var(--text-body);
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--text-heading);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+/* ===========================================================================
+   App shell
+   ======================================================================== */
+
+.vm-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--surface-page);
+}
+
+.vm-main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-6) var(--space-7);
+}
+
+@media (max-width: 900px) {
+  .vm-shell {
+    flex-direction: column;
+  }
+  .vm-main {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* --- Sidebar ------------------------------------------------------------- */
+
+.vm-sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: var(--brand-primary);
+  color: var(--text-on-brand);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.vm-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-5) var(--space-5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: var(--space-3);
+}
+
+/* Section heading that groups the nav into Overview / Stock / Making. */
+.vm-sidebar__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  opacity: 0.55;
+  padding: 14px var(--space-5) 6px;
+}
+
+/* Stand-in for the Vimar profile mark: a stitched burgundy/pink monogram. */
+.vm-sidebar__mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--vimar-pink-300), var(--vimar-magenta-500));
+  color: var(--vimar-burgundy-900);
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: 17px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.vm-sidebar__name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: 16px;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.3;
+}
+
+.vm-sidebar__tagline {
+  display: block;
+  font-family: var(--font-script);
+  font-size: 17px;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.vm-sidebar__link {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: 15px;
+  padding: 11px var(--space-5);
+  white-space: nowrap;
+  color: var(--text-on-brand);
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+  margin-right: var(--space-3);
+  transition: background 0.12s ease, color 0.12s ease;
+  display: block;
+}
+
+.vm-sidebar__link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-on-brand);
+}
+
+.vm-sidebar__link[aria-current="page"] {
+  background: var(--vimar-cream-100);
+  color: var(--vimar-ink-900);
+}
+.vm-sidebar__link[aria-current="page"]:hover {
+  background: var(--vimar-cream-100);
+}
+
+.vm-sidebar__foot {
+  margin-top: auto;
+  padding: var(--space-5) var(--space-5) 0;
+  font-size: var(--text-label);
+  opacity: 0.65;
+  line-height: var(--leading-snug);
+}
+
+@media (max-width: 900px) {
+  .vm-sidebar {
+    width: 100%;
+    padding-bottom: var(--space-3);
+    position: static;
+    height: auto;
+    overflow-y: visible;
+  }
+  .vm-sidebar__nav {
+    display: flex;
+    overflow-x: auto;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+  }
+  .vm-sidebar__link {
+    border-radius: var(--radius-pill);
+    margin-right: 0;
+  }
+  /* The grouping headings don't survive a horizontal scroller — drop them. */
+  .vm-sidebar__label,
+  .vm-sidebar__foot {
+    display: none;
+  }
+}
+
+/* ===========================================================================
+   Page furniture
+   ======================================================================== */
+
+.vm-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+  padding-bottom: 14px;
+  border-bottom: var(--border-w-sm) solid var(--border-soft);
+}
+
+.vm-page-title {
+  font-size: var(--text-display-md);
+  font-weight: var(--weight-heavy);
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* Handwritten note keeps the brand's voice on data-dense back-office screens. */
+.vm-page-note {
+  font-family: var(--font-script);
+  font-size: 21px;
+  color: var(--brand-secondary);
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.vm-page-head__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.vm-section-title {
+  font-size: var(--text-display-sm);
+  margin: var(--space-6) 0 var(--space-3);
+}
+.vm-section-title:first-child {
+  margin-top: 0;
+}
+
+.vm-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.vm-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.vm-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.vm-muted {
+  color: var(--text-muted);
+}
+.vm-small {
+  font-size: var(--text-body-sm);
+}
+.vm-tiny {
+  font-size: var(--text-label);
+}
+.vm-num {
+  font-variant-numeric: tabular-nums;
+}
+.vm-strong {
+  font-weight: var(--weight-bold);
+  color: var(--text-heading);
+}
+.vm-script {
+  font-family: var(--font-script);
+  font-size: var(--text-script-md);
+  color: var(--vimar-burgundy-700);
+  line-height: 1;
+}
+.vm-right {
+  text-align: right;
+}
+.vm-spacer {
+  flex: 1;
+}
+
+/* ===========================================================================
+   Button
+   ======================================================================== */
+
+.vm-btn {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-body-md);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 24px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+
+.vm-btn--sm {
+  font-size: var(--text-body-sm);
+  padding: 8px 18px;
+}
+.vm-btn--lg {
+  font-size: var(--text-body-lg);
+  padding: 16px 32px;
+}
+
+.vm-btn--primary {
+  background: var(--brand-primary);
+  color: var(--text-on-brand);
+  box-shadow: var(--shadow-pop);
+}
+.vm-btn--primary:hover {
+  background: var(--brand-primary-hover);
+  color: var(--text-on-brand);
+}
+
+.vm-btn--secondary {
+  background: var(--brand-accent);
+  color: var(--text-on-yellow);
+  box-shadow: 0 3px 0 rgba(160, 120, 20, 0.6);
+}
+.vm-btn--secondary:hover {
+  background: var(--brand-accent-hover);
+  color: var(--text-on-yellow);
+}
+
+.vm-btn--ghost {
+  background: transparent;
+  color: var(--brand-primary);
+  box-shadow: inset 0 0 0 2px var(--brand-primary);
+}
+.vm-btn--ghost:hover {
+  background: var(--surface-sticker);
+  color: var(--brand-primary);
+}
+
+.vm-btn--danger {
+  background: transparent;
+  color: var(--vimar-burgundy-500);
+  box-shadow: inset 0 0 0 2px var(--vimar-pink-200);
+}
+.vm-btn--danger:hover {
+  background: var(--vimar-pink-100);
+  color: var(--vimar-burgundy-900);
+}
+
+/* The "soft toy squish": the pop shadow collapses and the button sinks. */
+.vm-btn:not(:disabled):active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.vm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vm-btn:focus-visible {
+  outline: 3px solid var(--brand-secondary);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   Badge / Tag
+   ======================================================================== */
+
+.vm-badge {
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: 5px 13px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.vm-badge--pink {
+  background: var(--vimar-pink-200);
+  color: var(--vimar-burgundy-700);
+}
+.vm-badge--yellow {
+  background: var(--vimar-yellow-400);
+  color: var(--text-on-yellow);
+}
+.vm-badge--cream {
+  background: var(--vimar-cream-200);
+  color: var(--vimar-ink-900);
+}
+.vm-badge--burgundy {
+  background: var(--vimar-burgundy-700);
+  color: var(--text-on-brand);
+}
+
+.vm-tag {
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-body-sm);
+  color: var(--vimar-burgundy-700);
+  background: var(--surface-card);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-pill);
+  padding: 4px 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: default;
+}
+
+.vm-tag::before {
+  content: "#";
+  opacity: 0.6;
+}
+
+button.vm-tag {
+  cursor: pointer;
+  transition: opacity 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+/* Unselected tags fade back rather than disappear, so the full vocabulary
+   stays visible while picking. */
+button.vm-tag[aria-pressed="false"] {
+  opacity: 0.45;
+}
+button.vm-tag[aria-pressed="true"] {
+  border-color: var(--brand-secondary);
+  background: var(--vimar-pink-100);
+}
+button.vm-tag:hover {
+  opacity: 1;
+}
+
+/* ===========================================================================
+   Card (polaroid)
+   ======================================================================== */
+
+.vm-card {
+  background: var(--surface-card);
+  padding: 10px 10px 16px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.vm-card__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 2px;
+  background: var(--surface-card-alt);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* No photo yet: a soft yarn-swatch placeholder with the pattern's initial. */
+.vm-card__placeholder {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--vimar-pink-100),
+    var(--vimar-pink-100) 10px,
+    var(--vimar-cream-200) 10px,
+    var(--vimar-cream-200) 20px
+  );
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: 40px;
+  color: var(--vimar-magenta-300);
+}
+
+.vm-card__caption {
+  font-family: var(--font-script);
+  font-size: var(--text-script-md);
+  color: var(--vimar-ink-900);
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Slight independent rotation — collage, not corporate grid. */
+.vm-card--tilt-a {
+  transform: rotate(-1.5deg);
+}
+.vm-card--tilt-b {
+  transform: rotate(1.5deg);
+}
+
+/* ===========================================================================
+   Panel (inline form surface)
+   ======================================================================== */
+
+.vm-panel {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+}
+
+.vm-panel--sticker {
+  background: var(--surface-sticker);
+  box-shadow: var(--shadow-sticker);
+}
+
+.vm-panel__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-body-lg);
+  color: var(--text-heading);
+  margin: 0 0 var(--space-4);
+}
+
+.vm-panel__foot {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--surface-card-alt);
+}
+
+/* ===========================================================================
+   Confirm dialog
+   ======================================================================== */
+
+.vm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 34, 46, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 1000;
+}
+
+.vm-modal {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+  width: 100%;
+  max-width: 380px;
+}
+
+.vm-modal__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-body-lg);
+  color: var(--text-heading);
+  margin: 0 0 var(--space-3);
+}
+
+.vm-modal__body {
+  color: var(--text-body);
+  font-size: var(--text-body-sm);
+}
+
+.vm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* ===========================================================================
+   Form controls
+   ======================================================================== */
+
+.vm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.vm-field__label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.vm-field__hint {
+  font-size: var(--text-label);
+  color: var(--text-muted);
+}
+
+.vm-input,
+.vm-select,
+.vm-textarea {
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  color: var(--text-body);
+  background: var(--surface-card);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.12s ease;
+}
+
+.vm-textarea {
+  resize: vertical;
+  min-height: 76px;
+  line-height: var(--leading-normal);
+}
+
+.vm-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%236c033c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px;
+}
+
+.vm-input:focus,
+.vm-select:focus,
+.vm-textarea:focus {
+  border-color: var(--brand-secondary);
+}
+
+.vm-input::placeholder,
+.vm-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.vm-input--num {
+  font-variant-numeric: tabular-nums;
+}
+
+.vm-form-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.vm-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.vm-input-group__suffix {
+  font-size: var(--text-body-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* --- Checkbox ------------------------------------------------------------ */
+
+.vm-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--text-body);
+  font-size: var(--text-body-md);
+  line-height: var(--leading-snug);
+}
+
+.vm-check__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.vm-check__box {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 2px solid var(--vimar-burgundy-700);
+  background: var(--surface-card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: transparent;
+  font-size: 14px;
+  font-weight: var(--weight-bold);
+  transition: background 0.12s ease;
+}
+
+.vm-check__input:checked + .vm-check__box {
+  background: var(--vimar-burgundy-700);
+  color: var(--text-on-brand);
+}
+
+.vm-check__input:focus-visible + .vm-check__box {
+  outline: 3px solid var(--brand-secondary);
+  outline-offset: 2px;
+}
+
+.vm-check__input:disabled + .vm-check__box {
+  opacity: 0.5;
+}
+
+/* Completed checklist items recede rather than disappear. */
+.vm-check--done .vm-check__label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* --- Switch --------------------------------------------------------------- */
+
+.vm-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  color: var(--text-body);
+}
+
+.vm-switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.vm-switch__track {
+  width: 46px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  background: var(--vimar-cream-200);
+  border: 2px solid var(--border-soft);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.vm-switch__thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.vm-switch__input:checked + .vm-switch__track {
+  background: var(--brand-secondary);
+  border-color: var(--brand-secondary);
+}
+
+.vm-switch__input:checked + .vm-switch__track .vm-switch__thumb {
+  left: 22px;
+}
+
+.vm-switch__input:focus-visible + .vm-switch__track {
+  outline: 3px solid var(--brand-secondary);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   Table
+   ======================================================================== */
+
+.vm-table-wrap {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+}
+
+.vm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  min-width: 640px;
+}
+
+.vm-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--vimar-cream-200);
+  font-size: var(--text-label);
+  font-weight: var(--weight-bold);
+  color: var(--text-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.vm-table td {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-body-sm);
+  color: var(--text-body);
+  border-top: 1px solid var(--vimar-cream-200);
+  vertical-align: middle;
+}
+
+.vm-table tbody tr:hover > td {
+  background: var(--vimar-pink-100);
+}
+
+.vm-table__sub {
+  display: block;
+  font-size: var(--text-label);
+  color: var(--text-muted);
+}
+
+.vm-table__nested {
+  background: var(--surface-card-alt);
+}
+.vm-table__nested:hover > td {
+  background: var(--surface-card-alt);
+}
+
+.vm-table__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+/* ===========================================================================
+   StatCard
+   ======================================================================== */
+
+.vm-stats {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-bottom: var(--space-6);
+}
+
+.vm-stat {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+  background: var(--surface-card);
+}
+
+.vm-stat--yellow {
+  background: var(--vimar-yellow-100);
+}
+.vm-stat--pink {
+  background: var(--vimar-pink-100);
+}
+
+.vm-stat__label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.vm-stat__value {
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: 32px;
+  line-height: 1.05;
+  color: var(--brand-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.vm-stat--yellow .vm-stat__value {
+  color: var(--vimar-burgundy-700);
+}
+.vm-stat--pink .vm-stat__value {
+  color: var(--vimar-magenta-500);
+}
+
+.vm-stat__sub {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* ===========================================================================
+   BeadTitle
+   ======================================================================== */
+
+.vm-bead {
+  display: inline-flex;
+  gap: 6px;
+  padding: 7px 11px;
+  background: var(--vimar-pink-200);
+  border-radius: var(--radius-pill);
+}
+
+.vm-bead__b {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--vimar-cream-100);
+  border: 1px solid rgba(30, 34, 46, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: 16px;
+  color: var(--vimar-ink-900);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+}
+
+.vm-bead__b--gap {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  width: 12px;
+}
+
+/* ===========================================================================
+   Alerts / empty states
+   ======================================================================== */
+
+.vm-alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-snug);
+}
+
+.vm-alert--info {
+  background: var(--vimar-pink-100);
+  color: var(--vimar-burgundy-900);
+}
+.vm-alert--warn {
+  background: var(--vimar-yellow-100);
+  color: var(--vimar-burgundy-900);
+}
+.vm-alert--error {
+  background: var(--vimar-pink-200);
+  color: var(--vimar-burgundy-900);
+}
+.vm-alert--success {
+  background: var(--vimar-cream-200);
+  color: var(--vimar-ink-900);
+}
+
+.vm-alert__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  margin-bottom: 2px;
+}
+
+.vm-empty {
+  background: var(--surface-card);
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-7) var(--space-5);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.vm-empty__title {
+  font-family: var(--font-script);
+  font-size: var(--text-script-lg);
+  color: var(--vimar-magenta-500);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+/* ===========================================================================
+   Calendar
+   ======================================================================== */
+
+.vm-cal {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.vm-cal__head,
+.vm-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.vm-cal__head {
+  background: var(--vimar-cream-200);
+}
+
+.vm-cal__dow {
+  padding: 10px var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-heading);
+  text-align: center;
+}
+
+.vm-cal__day {
+  min-height: 112px;
+  border-top: 1px solid var(--vimar-cream-200);
+  border-left: 1px solid var(--vimar-cream-200);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vm-cal__day:nth-child(7n + 1) {
+  border-left: none;
+}
+
+/* Days spilling in from the neighbouring months recede. */
+.vm-cal__day--outside {
+  background: var(--vimar-cream-100);
+  opacity: 0.55;
+}
+
+.vm-cal__day--today {
+  background: var(--vimar-pink-100);
+}
+
+.vm-cal__daynum {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-body-sm);
+  color: var(--text-muted);
+  text-align: right;
+  padding: 0 2px;
+}
+
+.vm-cal__day--today .vm-cal__daynum {
+  color: var(--brand-primary);
+}
+
+.vm-cal__chip {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+  padding: 4px 7px;
+  border-radius: var(--radius-sm);
+  background: var(--vimar-cream-200);
+  color: var(--vimar-ink-900);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vm-cal__chip:hover {
+  background: var(--vimar-pink-200);
+  color: var(--vimar-burgundy-900);
+}
+
+.vm-cal__chip--craft {
+  background: var(--vimar-pink-200);
+  color: var(--vimar-burgundy-700);
+}
+.vm-cal__chip--learn {
+  background: var(--vimar-yellow-200);
+  color: var(--text-on-yellow);
+}
+.vm-cal__chip--content {
+  background: var(--vimar-magenta-300);
+  color: var(--vimar-burgundy-900);
+}
+.vm-cal__chip--restock {
+  background: var(--vimar-cream-200);
+  color: var(--vimar-ink-900);
+}
+
+.vm-cal__chip--done {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* The "you're short on yarn" marker, kept legible at chip size. */
+.vm-cal__chip--blocked {
+  box-shadow: inset 0 0 0 2px var(--vimar-burgundy-700);
+}
+
+.vm-cal__more {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-left: 7px;
+}
+
+@media (max-width: 900px) {
+  .vm-cal__day {
+    min-height: 78px;
+  }
+  .vm-cal__chip {
+    font-size: 11px;
+    padding: 3px 5px;
+  }
+}
+
+/* --- Event list ----------------------------------------------------------- */
+
+.vm-event {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+}
+
+.vm-event__when {
+  flex-shrink: 0;
+  width: 92px;
+  text-align: center;
+  font-family: var(--font-display);
+  line-height: 1.15;
+}
+
+.vm-event__when b {
+  display: block;
+  font-size: 26px;
+  font-weight: var(--weight-heavy);
+  color: var(--brand-primary);
+}
+
+.vm-event__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vm-event__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-body-lg);
+  color: var(--text-heading);
+}
+
+/* --- Checklist ------------------------------------------------------------ */
+
+.vm-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.vm-checklist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--vimar-cream-100);
+}
+
+.vm-checklist__item:hover {
+  background: var(--vimar-pink-100);
+}
+
+.vm-checklist__item > .vm-check {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===========================================================================
+   Image uploader
+   ======================================================================== */
+
+.vm-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.vm-uploader__row {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+/* Photo mat, echoing the polaroid card treatment. */
+.vm-uploader__preview {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-card-alt);
+  border: var(--border-w-sm) solid var(--border-soft);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.vm-uploader__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vm-uploader__empty {
+  font-family: var(--font-script);
+  font-size: 17px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.vm-uploader__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+/* Small square thumbnail for table rows. */
+.vm-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--surface-card-alt);
+  border: 1px solid var(--border-soft);
+  display: block;
+  flex-shrink: 0;
+}
+
+.vm-thumb--empty {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: 15px;
+  color: var(--vimar-magenta-300);
+}
+
+.vm-cell-media {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ===========================================================================
+   Utilities
+   ======================================================================== */
+
+.vm-divider {
+  height: 1px;
+  background: var(--surface-card-alt);
+  border: 0;
+  margin: var(--space-4) 0;
+}
+
+.vm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.vm-meter {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--vimar-cream-200);
+  overflow: hidden;
+}
+
+.vm-meter__fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--brand-secondary);
+}
+
+.vm-meter__fill--low {
+  background: var(--vimar-pink-300);
+}
+.vm-meter__fill--out {
+  background: var(--vimar-burgundy-700);
+}
+
+.vm-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

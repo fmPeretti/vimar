@@ -1,0 +1,30 @@
+# Joins the shared `edge` network so the reverse-proxy stack can reach this
+# container by name — same pattern as satriales-web. `edge` is created by
+# that stack, not this one, so it's declared external here.
+#
+#   docker network create edge   # only if it doesn't already exist
+#   docker compose up -d --build
+
+services:
+  vimar-web:
+    build: .
+    image: vimar-web:latest
+    container_name: vimar-web
+    restart: unless-stopped
+    networks:
+      edge:
+        aliases:
+          - vimar-web
+    env_file:
+      - deploy/vimar.env
+    environment:
+      DATABASE_PATH: /app/data/vimar.db
+    volumes:
+      # Bind mount, not a named volume: the host-side backup timer
+      # (deploy/vimar-backup.service) reads the same file directly.
+      - ${VIMAR_DATA_DIR:-/srv/vimar/data}:/app/data
+    # No published ports — nginx reaches this over the `edge` network only.
+
+networks:
+  edge:
+    external: true

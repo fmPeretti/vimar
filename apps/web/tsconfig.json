@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@vimar/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@vimar/core/*": [
+        "../../packages/core/src/*"
+      ],
+      "@vimar/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@vimar/db/*": [
+        "../../packages/db/src/*"
+      ],
+      "@vimar/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@vimar/ui/*": [
+        "../../packages/ui/src/*"
+      ]
+    },
+    "allowJs": true,
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

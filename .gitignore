@@ -1,0 +1,18 @@
+node_modules/
+.next/
+dist/
+*.tsbuildinfo
+.env
+.env.local
+deploy/vimar.env
+
+# SQLite database + WAL/shm sidecars, restores and staging files
+data/*.db
+data/*-shm
+data/*-wal
+data/*.replaced-*
+data/*.incoming-*
+data/restored-*
+
+# Encrypted backups live on their own branch, never on this one.
+backups/

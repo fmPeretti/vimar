@@ -1,0 +1,31 @@
+{
+  "name": "vimar",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @vimar/web",
+    "build": "npm run build --workspace @vimar/web",
+    "start": "npm run start --workspace @vimar/web",
+    "db:push": "npm run db:push --workspace @vimar/db",
+    "db:seed": "npm run db:seed --workspace @vimar/db",
+    "db:reseed": "npm run db:seed --workspace @vimar/db -- --force",
+    "db:studio": "npm run db:studio --workspace @vimar/db",
+    "db:backup": "npm run db:backup --workspace @vimar/db --",
+    "db:backup:push": "npm run db:backup --workspace @vimar/db -- --push",
+    "db:restore": "npm run db:restore --workspace @vimar/db --",
+    "setup": "npm install && npm run db:push && npm run db:seed",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p apps/web/tsconfig.json",
+    "test": "node --test packages/core/test/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.10.7"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}

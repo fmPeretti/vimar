@@ -1,0 +1,105 @@
+/* Vimar Stitches design tokens — ported verbatim from the Claude Design project. */
+
+:root {
+  /* --- Palette ------------------------------------------------------------ */
+  --vimar-burgundy-900: #4a0229;
+  --vimar-burgundy-700: #6c033c;
+  --vimar-burgundy-500: #8f1152;
+  --vimar-magenta-500: #a93671;
+  --vimar-magenta-300: #d1699b;
+  --vimar-pink-300: #ffb8d6;
+  --vimar-pink-200: #ffd7e7;
+  --vimar-pink-100: #fdf0f5;
+  --vimar-yellow-500: #e8c25f;
+  --vimar-yellow-400: #f5da7e;
+  --vimar-yellow-200: #f9e292;
+  --vimar-yellow-100: #fdf3d9;
+  --vimar-cream-200: #eceade;
+  --vimar-cream-100: #faf6ea;
+  --vimar-white: #ffffff;
+  --vimar-ink-900: #1e222e;
+  --vimar-ink-700: #3a3a3f;
+  --vimar-ink-500: #6b6570;
+  --vimar-navy-700: #242a3d;
+
+  /* --- Semantic ----------------------------------------------------------- */
+  --surface-page: var(--vimar-cream-100);
+  --surface-card: var(--vimar-white);
+  --surface-card-alt: var(--vimar-cream-200);
+  --surface-brand: var(--vimar-burgundy-700);
+  --surface-sticker: var(--vimar-pink-100);
+
+  --text-heading: var(--vimar-ink-900);
+  --text-body: var(--vimar-ink-700);
+  --text-muted: var(--vimar-ink-500);
+  --text-on-brand: var(--vimar-cream-100);
+  --text-on-yellow: var(--vimar-burgundy-900);
+
+  --brand-primary: var(--vimar-burgundy-700);
+  --brand-primary-hover: var(--vimar-burgundy-900);
+  --brand-secondary: var(--vimar-magenta-500);
+  --brand-accent: var(--vimar-yellow-400);
+  --brand-accent-hover: var(--vimar-yellow-500);
+
+  --border-soft: var(--vimar-pink-200);
+  --border-strong: var(--vimar-burgundy-700);
+  --border-ink: var(--vimar-ink-900);
+
+  --link-color: var(--vimar-burgundy-700);
+  --link-hover: var(--vimar-magenta-500);
+
+  /* --- Typography --------------------------------------------------------- */
+  --font-display: "Baloo 2", ui-rounded, "Segoe UI", sans-serif;
+  --font-body: "Quicksand", "Segoe UI", sans-serif;
+  --font-script: "Caveat", cursive;
+
+  --text-display-xl: clamp(40px, 6vw, 64px);
+  --text-display-lg: 36px;
+  --text-display-md: 28px;
+  --text-display-sm: 22px;
+  --text-body-lg: 19px;
+  --text-body-md: 16px;
+  --text-body-sm: 14px;
+  --text-label: 13px;
+  --text-script-lg: 40px;
+  --text-script-md: 28px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-heavy: 800;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.55;
+
+  --tracking-tight: -0.01em;
+  --tracking-wide: 0.04em;
+  --tracking-label: 0.08em;
+
+  /* --- Spacing, radius, shadow -------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  --shadow-sticker: 0 6px 14px rgba(108, 3, 60, 0.16);
+  --shadow-card: 0 10px 24px rgba(108, 3, 60, 0.12);
+  --shadow-pop: 0 3px 0 rgba(74, 2, 41, 0.9);
+  --shadow-inset-soft: inset 0 0 0 2px var(--vimar-pink-200);
+
+  --border-w-sm: 2px;
+  --border-w-md: 3px;
+}

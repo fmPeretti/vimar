@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base.json",
+  // Packages only. Each app owns its own tsconfig (they define app-local path
+  // aliases such as "@/*" that don't exist here); `npm run typecheck` runs both.
+  "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx", "packages/*/*.ts"],
+  "exclude": ["node_modules", "**/.next", "**/dist"]
+}

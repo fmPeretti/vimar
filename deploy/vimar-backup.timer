@@ -1,0 +1,17 @@
+[Unit]
+Description=Run the Vimar database backup daily
+Documentation=file:/srv/vimar/README.md
+
+[Timer]
+# 03:20 local time every day. The odd minute avoids the top-of-hour stampede
+# that everything else on the box schedules itself for.
+OnCalendar=*-*-* 03:20:00
+
+# Spread the actual start over 10 minutes.
+RandomizedDelaySec=10min
+
+# If the machine was asleep or off at 03:20, run as soon as it's back.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,51 @@
+# Encrypted database backup, pushed to the backup branch.
+#
+#   sudo install -m 0644 deploy/vimar-backup.service /etc/systemd/system/
+#   sudo install -m 0644 deploy/vimar-backup.timer   /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now vimar-backup.timer
+#
+# Run one on demand (and watch it):
+#   sudo systemctl start vimar-backup.service
+#   journalctl -u vimar-backup.service -n 50
+
+[Unit]
+Description=Vimar encrypted database backup
+Documentation=file:/srv/vimar/deploy/BACKUPS.md
+# Needs outbound HTTPS to reach the blob store.
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+
+# Match the user that owns the database. With the default blob target the only
+# credential needed is BLOB_READ_WRITE_TOKEN from the environment file — no
+# SSH keys or git credentials required.
+User=vimar
+Group=vimar
+WorkingDirectory=/srv/vimar
+
+EnvironmentFile=/etc/vimar/backup.env
+
+ExecStart=/usr/bin/npm run db:backup:push
+
+# Read-only with respect to the app; it never stops the service. SQLite's
+# online backup API copes with concurrent writes.
+
+# --- Hardening -------------------------------------------------------------
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/vimar
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+# Don't let a hung git push wedge the timer forever.
+TimeoutStartSec=15min
+
+[Install]
+WantedBy=multi-user.target
