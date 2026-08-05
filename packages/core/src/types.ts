@@ -1,5 +1,5 @@
 /**
- * Domain types for Vimar Ops.
+ * Domain types for Vimar.
  *
  * Money convention: every `*Cents` field is a number of cents. Unit costs are
  * allowed to be fractional cents (stuffing at $0.185/oz is a real thing), so

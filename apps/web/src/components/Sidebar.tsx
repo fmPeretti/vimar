@@ -25,11 +25,10 @@ export function Sidebar({ showLogout = false }: { showLogout?: boolean }) {
   return (
     <nav className="vm-sidebar" aria-label="Main">
       <div className="vm-sidebar__brand">
-        <span className="vm-sidebar__mark" aria-hidden="true">
-          VS
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element -- local static asset, no need for next/image here */}
+        <img className="vm-sidebar__mark" src="/logo.png" alt="" aria-hidden="true" />
         <span>
-          <span className="vm-sidebar__name">Vimar Ops</span>
+          <span className="vm-sidebar__name">Vimars</span>
           <span className="vm-sidebar__tagline">stitches &amp; stock</span>
         </span>
       </div>

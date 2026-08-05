@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, BeadTitle, Button, Field, Input } from "@vimar/ui";
+import { Alert, Button, Field, Input } from "@vimar/ui";
 import { useState } from "react";
 import { loginAction } from "@/lib/actions/auth-actions";
 import { useAction } from "@/lib/use-action";
@@ -25,10 +25,9 @@ export function LoginScreen({
   return (
     <div className="vm-login">
       <div className="vm-login__card">
-        <div className="vm-login__mark" aria-hidden="true">
-          VS
-        </div>
-        <BeadTitle>Vimar Ops</BeadTitle>
+        {/* eslint-disable-next-line @next/next/no-img-element -- local static asset, no need for next/image here */}
+        <img className="vm-login__mark" src="/logo.png" alt="" aria-hidden="true" />
+        <h1 className="vm-login__title">Sign in</h1>
         <span className="vm-login__tagline">stitches &amp; stock</span>
 
         {locked ? (

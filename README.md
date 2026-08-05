@@ -1,4 +1,4 @@
-# Vimar Ops
+# Vimar
 
 Internal tool for Vimar Stitches: track materials and what they cost, define
 patterns, record what each finished plushie actually consumed, and plan the

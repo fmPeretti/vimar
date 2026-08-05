@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Vimar Ops",
+  title: "Vimar",
   description: "Materials, patterns and finished-stock tracking for Vimar Stitches.",
 };
 
