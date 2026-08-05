@@ -31,9 +31,8 @@ ENV HOSTNAME=0.0.0.0
 # included (see apps/web/next.config.mjs: serverExternalPackages).
 COPY --from=builder /repo/apps/web/.next/standalone ./
 COPY --from=builder /repo/apps/web/.next/static ./apps/web/.next/static
-# No apps/web/public directory exists yet — add
-#   COPY --from=builder /repo/apps/web/public ./apps/web/public
-# here if one shows up later; standalone builds don't include it automatically.
+# Standalone builds don't include public/ automatically — has to be copied by hand.
+COPY --from=builder /repo/apps/web/public ./apps/web/public
 
 EXPOSE 3000
 CMD ["node", "apps/web/server.js"]
