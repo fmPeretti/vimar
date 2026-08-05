@@ -35,13 +35,70 @@ nano deploy/vimar.env          # BLOB_READ_WRITE_TOKEN, AUTH_USERNAME/PASSWORD
 docker network create edge     # only if the edge stack hasn't already made it
 docker compose up -d --build
 
-# 4. Vhost — the edge stack mounts this directory read-only
-#    (adjust the path to wherever that stack expects vhosts to live)
-cp deploy/vhost/vimar /path/to/edge/vhosts/vimar
-# then reload nginx from the edge stack
+# 4. Vhost + TLS — see the "First-time nginx + certbot" section below.
+#    Skip straight to it before step 5; the site needs to be reachable on
+#    :80 before certbot can issue a certificate.
 
 # 5. Backups — see BACKUPS.md for the systemd timer
 ```
+
+## First-time nginx + certbot setup
+
+The shared `edge` stack (`/opt/edge`) mounts one host directory per project
+into its nginx container, e.g. `/opt/donna/nginx/vhosts:/etc/nginx/vhosts/donna:ro`,
+and its `nginx.conf` picks up everything under
+`/etc/nginx/vhosts/*/*.conf` — note the `.conf`, files without it are
+silently ignored. certbot runs on the **host**, not in a container; it drops
+challenge files in `/var/www/certbot` and certs in `/etc/letsencrypt`, both of
+which the nginx container already mounts read-only.
+
+`deploy/vhost/vimar.conf` (the real vhost) has a `listen 443 ssl` block
+pointing at a certificate that doesn't exist yet on a fresh box. Loading it
+before the cert exists makes nginx refuse to (re)load, which means the `:80`
+challenge route never comes up either — so the first pass uses
+`deploy/vhost/vimar-bootstrap.conf` (HTTP-only) instead:
+
+```bash
+# 1. Ops directory nginx will actually read from — start with the bootstrap
+#    (HTTP-only) version, since no cert exists yet.
+mkdir -p /opt/vimar/nginx/vhosts
+cp /opt/vimar/deploy/vhost/vimar-bootstrap.conf /opt/vimar/nginx/vhosts/vimar.conf
+
+# 2. Add vimar to the edge stack, same pattern as donna/satriales
+cd /opt/edge
+nano docker-compose.yml
+#   add under nginx: volumes:
+#     - /opt/vimar/nginx/vhosts:/etc/nginx/vhosts/vimar:ro
+
+# 3. New volume mount -> the container needs recreating, not just a reload.
+#    This briefly restarts nginx for every project behind edge, donna and
+#    satriales included — a few seconds of downtime, not a config change to
+#    either of those. Fine off-hours, worth a heads-up otherwise.
+docker compose up -d
+
+# 4. Confirm the challenge route is actually reachable before asking
+#    Let's Encrypt to hit it — DNS for viamar.amiiboexplorer.com must already
+#    point at this VPS.
+curl -I http://viamar.amiiboexplorer.com/.well-known/acme-challenge/x
+# expect 404 from nginx (means it's routing here), not a timeout/refused
+
+# 5. Issue the certificate
+certbot certonly --webroot -w /var/www/certbot -d viamar.amiiboexplorer.com
+
+# 6. Swap in the real vhost now that the cert exists, and reload — no
+#    container recreate needed this time, the volume is already mounted.
+cp /opt/vimar/deploy/vhost/vimar.conf /opt/vimar/nginx/vhosts/vimar.conf
+docker compose ps                       # get the nginx container's name
+docker exec <that-container-name> nginx -s reload
+
+# 7. Verify
+curl -I https://viamar.amiiboexplorer.com
+```
+
+certbot's systemd timer (installed with the `certbot` package) handles
+renewal automatically — nginx picks up the renewed cert on its own 12-hourly
+reload loop (see the `command:` block in edge's `docker-compose.yml`), no
+action needed here.
 
 ## Redeploying
 
