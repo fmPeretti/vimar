@@ -77,13 +77,13 @@ nano docker-compose.yml
 docker compose up -d
 
 # 4. Confirm the challenge route is actually reachable before asking
-#    Let's Encrypt to hit it — DNS for viamar.amiiboexplorer.com must already
+#    Let's Encrypt to hit it — DNS for vimar.amiiboexplorer.com must already
 #    point at this VPS.
-curl -I http://viamar.amiiboexplorer.com/.well-known/acme-challenge/x
+curl -I http://vimar.amiiboexplorer.com/.well-known/acme-challenge/x
 # expect 404 from nginx (means it's routing here), not a timeout/refused
 
 # 5. Issue the certificate
-certbot certonly --webroot -w /var/www/certbot -d viamar.amiiboexplorer.com
+certbot certonly --webroot -w /var/www/certbot -d vimar.amiiboexplorer.com
 
 # 6. Swap in the real vhost now that the cert exists, and reload — no
 #    container recreate needed this time, the volume is already mounted.
@@ -92,7 +92,7 @@ docker compose ps                       # get the nginx container's name
 docker exec <that-container-name> nginx -s reload
 
 # 7. Verify
-curl -I https://viamar.amiiboexplorer.com
+curl -I https://vimar.amiiboexplorer.com
 ```
 
 certbot's systemd timer (installed with the `certbot` package) handles
