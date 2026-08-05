@@ -1,0 +1,77 @@
+"use client";
+
+import { Alert, BeadTitle, Button, Field, Input } from "@vimar/ui";
+import { useState } from "react";
+import { loginAction } from "@/lib/actions/auth-actions";
+import { useAction } from "@/lib/use-action";
+
+export function LoginScreen({
+  from,
+  initiallyLocked,
+}: {
+  from: string | null;
+  initiallyLocked: boolean;
+}) {
+  const action = useAction();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const locked = initiallyLocked && !action.error;
+
+  const submit = () => {
+    action.run(() => loginAction(username, password, from));
+  };
+
+  return (
+    <div className="vm-login">
+      <div className="vm-login__card">
+        <div className="vm-login__mark" aria-hidden="true">
+          VS
+        </div>
+        <BeadTitle>Vimar Ops</BeadTitle>
+        <span className="vm-login__tagline">stitches &amp; stock</span>
+
+        {locked ? (
+          <Alert tone="error" title="Locked">
+            Too many failed attempts. Restart the server, or clear it in the database.
+          </Alert>
+        ) : action.error ? (
+          <Alert tone="error">{action.error}</Alert>
+        ) : null}
+
+        <form
+          className="vm-login__form"
+          style={{ marginTop: 20 }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+        >
+          <Field label="Username">
+            <Input
+              value={username}
+              autoComplete="username"
+              autoFocus
+              disabled={locked || action.pending}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Field>
+          <Field label="Password">
+            <Input
+              type="password"
+              value={password}
+              autoComplete="current-password"
+              disabled={locked || action.pending}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Field>
+          <Button type="submit" disabled={locked || action.pending}>
+            {action.pending ? "Signing in…" : "Sign in"}
+          </Button>
+        </form>
+
+        <p className="vm-login__foot">Three wrong passwords in a row locks the site.</p>
+      </div>
+    </div>
+  );
+}

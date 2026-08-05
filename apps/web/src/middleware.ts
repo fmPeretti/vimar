@@ -1,11 +1,14 @@
-import { timingSafeEqual } from "node:crypto";
-import { isLoginLocked, recordFailedLogin, recordSuccessfulLogin, resetLoginLockout } from "@vimar/db";
+import { resetLoginLockout } from "@vimar/db";
 import { NextResponse, type NextRequest } from "next/server";
+import { isValidSessionToken, SESSION_COOKIE } from "@/lib/session";
 
 /**
- * Site-wide HTTP Basic Auth, enforced in Node.js middleware (not Edge) so it
- * can talk to SQLite directly — the lockout state lives in the database, not
- * in a per-instance memory that a second server process wouldn't share.
+ * Site-wide login gate. Enforced in Node.js middleware (not Edge) so
+ * resetLoginLockout can talk to SQLite directly on process start — the
+ * lockout state lives in the database, not in memory a second instance
+ * wouldn't share. The actual login form, credential check and lockout
+ * bookkeeping live in /login and lib/actions/auth-actions.ts; this file only
+ * decides "does this request already have a valid session".
  *
  * Only set AUTH_USERNAME/AUTH_PASSWORD in production: leaving them unset (the
  * default for local dev) disables the check entirely.
@@ -14,34 +17,6 @@ export const config = {
   runtime: "nodejs",
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
-
-const REALM = "Vimar Ops";
-const LOCKOUT_MESSAGE =
-  "Locked after too many failed attempts. Restart the server, or clear it in the database with:\n" +
-  "  UPDATE auth_lockout SET failed_attempts = 0, locked = 0 WHERE id = 1;";
-
-function unauthorized(body = "Authentication required."): NextResponse {
-  return new NextResponse(body, {
-    status: 401,
-    headers: { "WWW-Authenticate": `Basic realm="${REALM}"` },
-  });
-}
-
-function locked(): NextResponse {
-  return new NextResponse(LOCKOUT_MESSAGE, { status: 423 });
-}
-
-/** Equal in content AND length-independent timing, without leaking length via a short-circuit. */
-function safeEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
-  if (bufA.length !== bufB.length) {
-    // Still do a same-cost comparison so a mismatched length isn't a faster path.
-    timingSafeEqual(bufA, bufA);
-    return false;
-  }
-  return timingSafeEqual(bufA, bufB);
-}
 
 // Node middleware runs inside the same long-lived process as the server, so
 // this module-level memo runs the reset exactly once per process start — the
@@ -63,28 +38,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   await resetOnBoot();
 
-  if (await isLoginLocked()) return locked();
+  const { pathname } = request.nextUrl;
+  if (pathname === "/login") return NextResponse.next();
 
-  const header = request.headers.get("authorization");
-  if (!header?.startsWith("Basic ")) return unauthorized();
-
-  let suppliedUser = "";
-  let suppliedPass = "";
-  try {
-    const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
-    const sep = decoded.indexOf(":");
-    if (sep === -1) return unauthorized();
-    suppliedUser = decoded.slice(0, sep);
-    suppliedPass = decoded.slice(sep + 1);
-  } catch {
-    return unauthorized();
-  }
-
-  if (safeEqual(suppliedUser, username) && safeEqual(suppliedPass, password)) {
-    await recordSuccessfulLogin();
+  if (isValidSessionToken(request.cookies.get(SESSION_COOKIE)?.value)) {
     return NextResponse.next();
   }
 
-  const justLocked = await recordFailedLogin();
-  return justLocked ? locked() : unauthorized("Wrong username or password.");
+  const url = request.nextUrl.clone();
+  url.pathname = "/login";
+  url.search = "";
+  if (pathname !== "/") url.searchParams.set("from", pathname);
+  return NextResponse.redirect(url);
 }

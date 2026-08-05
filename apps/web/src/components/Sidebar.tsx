@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logoutAction } from "@/lib/actions/auth-actions";
 
 type NavItem = { type: "label"; label: string } | { type: "link"; href: string; label: string };
 
@@ -18,7 +19,7 @@ const ITEMS: NavItem[] = [
   { type: "link", href: "/craft", label: "Complete a Pattern" },
 ];
 
-export function Sidebar() {
+export function Sidebar({ showLogout = false }: { showLogout?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -57,8 +58,18 @@ export function Sidebar() {
         )}
       </div>
 
-      <div className="vm-sidebar__foot">
-        Costs are tracked per purchase lot and consumed oldest-first.
+      <div className="vm-sidebar__bottom">
+        {showLogout ? (
+          <form action={logoutAction} className="vm-sidebar__logout-form">
+            <button type="submit" className="vm-sidebar__link vm-sidebar__logout">
+              Sign out
+            </button>
+          </form>
+        ) : null}
+
+        <div className="vm-sidebar__foot">
+          Costs are tracked per purchase lot and consumed oldest-first.
+        </div>
       </div>
     </nav>
   );

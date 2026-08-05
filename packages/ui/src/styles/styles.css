@@ -164,8 +164,29 @@ a:hover {
   background: var(--vimar-cream-100);
 }
 
-.vm-sidebar__foot {
+.vm-sidebar__bottom {
   margin-top: auto;
+}
+
+.vm-sidebar__logout-form {
+  margin-bottom: 4px;
+}
+
+.vm-sidebar__logout {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  opacity: 0.85;
+}
+
+.vm-sidebar__logout:hover {
+  opacity: 1;
+}
+
+.vm-sidebar__foot {
   padding: var(--space-5) var(--space-5) 0;
   font-size: var(--text-label);
   opacity: 0.65;
@@ -535,6 +556,68 @@ button.vm-tag:hover {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: 1px solid var(--surface-card-alt);
+}
+
+/* ===========================================================================
+   Login
+   ======================================================================== */
+
+.vm-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: radial-gradient(
+    circle at 30% 20%,
+    var(--vimar-magenta-500),
+    var(--brand-primary) 60%
+  );
+}
+
+.vm-login__card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-7) var(--space-6);
+  text-align: center;
+}
+
+.vm-login__mark {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--vimar-pink-300), var(--vimar-magenta-500));
+  color: var(--vimar-burgundy-900);
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: 24px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.vm-login__tagline {
+  display: block;
+  font-family: var(--font-script);
+  font-size: var(--text-script-md);
+  color: var(--text-muted);
+  margin: var(--space-1) 0 var(--space-6);
+}
+
+.vm-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: left;
+}
+
+.vm-login__foot {
+  margin-top: var(--space-5);
+  font-size: var(--text-label);
+  color: var(--text-muted);
 }
 
 /* ===========================================================================

@@ -194,10 +194,17 @@ somewhere that is neither the server nor the blob store.
 
 ## Site login
 
-Off by default (`AUTH_USERNAME`/`AUTH_PASSWORD` unset). Set both and every
-request needs HTTP Basic Auth — the check runs in
-[middleware.ts](apps/web/src/middleware.ts), which uses the Node.js (not
-Edge) runtime specifically so it can query SQLite directly.
+Off by default (`AUTH_USERNAME`/`AUTH_PASSWORD` unset). Set both — plus
+`AUTH_SESSION_SECRET` — and every page requires signing in at `/login`, a
+real page styled like the rest of the app, not the browser's native Basic
+Auth prompt. A successful login sets a signed, `httpOnly` session cookie
+(30-day expiry); "Sign out" in the sidebar clears it.
+
+[middleware.ts](apps/web/src/middleware.ts) is what actually gates every
+request — it runs on the Node.js (not Edge) runtime so it can reach SQLite
+directly for the lockout check. It only checks whether the request already
+has a valid session cookie; the credential check itself lives in
+`lib/actions/auth-actions.ts`, called from the `/login` form.
 
 Three wrong passwords in a row locks the site — even a correct password
 afterwards is rejected — until either:
@@ -208,6 +215,11 @@ afterwards is rejected — until either:
   ```sql
   UPDATE auth_lockout SET failed_attempts = 0, locked = 0 WHERE id = 1;
   ```
+
+`AUTH_SESSION_SECRET` signs the session cookie and is deliberately separate
+from `AUTH_PASSWORD` — reusing the password would mean a short one also
+weakens every issued cookie, and changing the password would silently log
+everyone out. Generate it the same way: `openssl rand -base64 32`.
 
 This is meant for one household behind a reverse proxy, not multi-user
 auth — there's one username/password pair, not a user table.
