@@ -22,7 +22,7 @@ services:
     volumes:
       # Bind mount, not a named volume: the host-side backup timer
       # (deploy/vimar-backup.service) reads the same file directly.
-      - ${VIMAR_DATA_DIR:-/srv/vimar/data}:/app/data
+      - ${VIMAR_DATA_DIR:-/opt/vimar/data}:/app/data
     # No published ports — nginx reaches this over the `edge` network only.
 
 networks:

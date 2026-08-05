@@ -8,24 +8,24 @@ uses, so nothing needs to run inside the container for that to work.
 ## Layout on the VPS
 
 ```
-/srv/vimar/            git clone of this repo — used to run db:push,
+/opt/vimar/            git clone of this repo — used to run db:push,
                         db:seed and the backup/restore CLIs on the host
-/srv/vimar/data/        vimar.db + WAL/shm — bind-mounted into the container
+/opt/vimar/data/        vimar.db + WAL/shm — bind-mounted into the container
 ```
 
 The container and the host-run backup timer both read/write
-`/srv/vimar/data/vimar.db`. SQLite's WAL mode is what makes that safe —
+`/opt/vimar/data/vimar.db`. SQLite's WAL mode is what makes that safe —
 concurrent readers/writers across processes are exactly what it's for.
 
 ## First deploy
 
 ```bash
-git clone <repo> /srv/vimar && cd /srv/vimar
+git clone <repo> /opt/vimar && cd /opt/vimar
 
 # 1. Schema + seed, run from the host against the real data directory
-mkdir -p /srv/vimar/data
-DATABASE_PATH=/srv/vimar/data/vimar.db npm install
-DATABASE_PATH=/srv/vimar/data/vimar.db npm run db:push
+mkdir -p /opt/vimar/data
+DATABASE_PATH=/opt/vimar/data/vimar.db npm install
+DATABASE_PATH=/opt/vimar/data/vimar.db npm run db:push
 
 # 2. Container config
 install -D -m 0600 deploy/vimar.env.example deploy/vimar.env
@@ -46,7 +46,7 @@ cp deploy/vhost/vimar /path/to/edge/vhosts/vimar
 ## Redeploying
 
 ```bash
-cd /srv/vimar && git pull
+cd /opt/vimar && git pull
 docker compose up -d --build
 ```
 
@@ -56,7 +56,7 @@ before restarting the container — the container itself never runs migrations.
 ## Why the data directory is a bind mount, not a named volume
 
 The backup timer (`deploy/vimar-backup.service`) runs on the host, not in a
-container, and opens `/srv/vimar/data/vimar.db` directly with the same
+container, and opens `/opt/vimar/data/vimar.db` directly with the same
 `packages/db` code the app uses. A bind mount makes that trivial — a named
 Docker volume would mean either running backups inside the container too, or
 reaching into Docker's volume storage to get at the file, for no benefit here.
@@ -67,4 +67,4 @@ reaching into Docker's volume storage to get at the file, for no benefit here.
 in-process part of the login lockout the same way a plain restart does (see
 "Site login" in the root README). If you need to clear a lock without a
 redeploy, run the `UPDATE auth_lockout ...` statement from the README
-directly against `/srv/vimar/data/vimar.db`.
+directly against `/opt/vimar/data/vimar.db`.

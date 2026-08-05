@@ -11,7 +11,7 @@
 
 [Unit]
 Description=Vimar encrypted database backup
-Documentation=file:/srv/vimar/deploy/BACKUPS.md
+Documentation=file:/opt/vimar/deploy/BACKUPS.md
 # Needs outbound HTTPS to reach the blob store.
 Wants=network-online.target
 After=network-online.target
@@ -24,7 +24,7 @@ Type=oneshot
 # SSH keys or git credentials required.
 User=vimar
 Group=vimar
-WorkingDirectory=/srv/vimar
+WorkingDirectory=/opt/vimar
 
 EnvironmentFile=/etc/vimar/backup.env
 
@@ -38,7 +38,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=/srv/vimar
+ReadWritePaths=/opt/vimar
 ProtectKernelTunables=true
 ProtectControlGroups=true
 RestrictSUIDSGID=true

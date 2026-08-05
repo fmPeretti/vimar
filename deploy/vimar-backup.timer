@@ -1,6 +1,6 @@
 [Unit]
 Description=Run the Vimar database backup daily
-Documentation=file:/srv/vimar/README.md
+Documentation=file:/opt/vimar/README.md
 
 [Timer]
 # 03:20 local time every day. The odd minute avoids the top-of-hour stampede

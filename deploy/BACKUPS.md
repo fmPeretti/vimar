@@ -123,7 +123,7 @@ token in the environment file and outbound HTTPS.
 ### cron
 
 ```cron
-20 3 * * *  cd /srv/vimar && set -a && . /etc/vimar/backup.env && set +a && /usr/bin/npm run db:backup:push >> /var/log/vimar-backup.log 2>&1
+20 3 * * *  cd /opt/vimar && set -a && . /etc/vimar/backup.env && set +a && /usr/bin/npm run db:backup:push >> /var/log/vimar-backup.log 2>&1
 ```
 
 ## Configuration
