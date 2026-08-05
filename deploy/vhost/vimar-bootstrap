@@ -1,0 +1,23 @@
+# Bootstrap-only vhost — just enough for certbot's HTTP-01 challenge to
+# reach this host on port 80. Use this FIRST, before the cert exists; the
+# real vhost (`deploy/vhost/vimar`) has a `server { listen 443 ssl; ... }`
+# block that references a certificate file which doesn't exist yet, so
+# deploying that one before the cert is issued makes nginx refuse to (re)load
+# — and then the challenge below never becomes reachable either. Chicken, egg.
+#
+# Usage: copy this to /etc/nginx/vhosts/vimar, reload nginx, run certbot,
+# then replace it with deploy/vhost/vimar and reload again. See
+# deploy/DEPLOY.md for the exact sequence.
+
+server {
+    listen 80;
+    server_name vimar.panbias.com.ar;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 404;
+    }
+}
